@@ -14,3 +14,12 @@ rm -rf covid-19-data
 ## Cumulative cases by county for each day
 
 The file `cumulative_counts_by_county.R` will generate a table for each day with the cumulative counts for cases and deaths at the county level. 
+
+### Accompanying Shiny App
+
+The `cumulative_by_state` directory contains a simple shiny app to navigate the county-level cumulative counts by state and date. Either run from rStudio, or from an open R session in this directory run
+
+```r
+library(rshiny)
+runApp('cumulative_by_state')
+```
