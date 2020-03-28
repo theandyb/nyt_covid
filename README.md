@@ -13,7 +13,7 @@ rm -rf covid-19-data
 
 ## Cumulative cases by county for each day
 
-The file `cumulative_counts_by_county.R` will generate a table for each day with the cumulative counts for cases and deaths at the county level. 
+The file `cumulative_counts_by_county.R` generates an excel document with the cumulative cases by counties across the dates in which there is data.
 
 ### Accompanying Shiny App
 
