@@ -23,3 +23,12 @@ The `cumulative_by_state` directory contains a simple shiny app to navigate the 
 library(rshiny)
 runApp('cumulative_by_state')
 ```
+
+## Growth over time
+
+The directory `growth_over_time` has a simple R shiny app to look at how case numbers have grown over time in each county.
+
+```r
+library(shiny)
+runApp('growth_over_time')
+```
