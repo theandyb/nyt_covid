@@ -59,7 +59,7 @@ server <- function(input, output) {
     })
     output$counts <- renderTable({
         counties %>% filter(date==cur_date(), state == input$state) %>%
-            arrange(county)
+            arrange(county) %>% select(county, fips, cases, deaths)
     })
     output$stateTotals <- renderTable({
         counties %>% filter(date==cur_date()) %>%
