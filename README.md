@@ -1,5 +1,7 @@
 # Some COVID-related Scripts
 
+Scripts and shiny apps I've used to play around with the [New York Times' COVID-19 data](https://github.com/nytimes/covid-19-data)
+
 ## Get the data
 
 Note: this might not be the most efficient way of doing this, but the scripts in this repository will assume that the `us-counties.csv` and `us-states.csv` files are in the top-level of the `data` directory.
