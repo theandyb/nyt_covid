@@ -51,9 +51,18 @@ server <- function(input, output) {
 
     output$distPlot <- renderPlot({
         df <- counties %>% 
-            filter(state == input$state, county == input$county) %>%
-            arrange(date) %>%
-            gather(type, count, 5:6)
+            filter(state == input$state)
+        if(input$county != "All"){
+            df <- df %>% filter(county == input$county) %>%
+                arrange(date) %>%
+                gather(type, count, 5:6)
+        } else{
+            df <- df %>% 
+                gather(type, count, 5:6) %>%
+                group_by(state, date, type) %>%
+                summarize(count = sum(count))
+        }
+        
         if(input$log == TRUE){
             df %<>% mutate(count = log10(count))
         }
@@ -75,7 +84,8 @@ server <- function(input, output) {
     })
     
     output$countyControl <- renderUI({
-        county_list <- state_county %>% filter(state==input$state) %>% pull(county)
+        county_list <- state_county %>% filter(state==input$state) %>% pull(county) %>% sort()
+        county_list <- c("All", county_list)
         selectInput("county", "County:", county_list)
     })
 }
