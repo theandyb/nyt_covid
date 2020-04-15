@@ -34,7 +34,8 @@ ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
             dateInput("date1", "Date:", value = min(counties$date)),
-            selectInput("state", "State:", sort(unique(counties$state)))
+            selectInput("state", "State:", sort(unique(counties$state))),
+            checkboxInput("case", "Sort by cases?")
         ),
 
         # Show a plot of the generated distribution
@@ -58,8 +59,18 @@ server <- function(input, output) {
             group_by(state) %>% summarise(cases = sum(cases), deaths = sum(deaths))
     })
     output$counts <- renderTable({
-        counties %>% filter(date==cur_date(), state == input$state) %>%
-            arrange(county) %>% select(county, fips, cases, deaths)
+        if(input$case){
+            counties %>% 
+                filter(date==cur_date(), state == input$state) %>%
+                arrange(county) %>% 
+                select(county, cases, deaths) %>% 
+                arrange(-cases)
+        } else{
+            counties %>% 
+                filter(date==cur_date(), state == input$state) %>%
+                arrange(county) %>% 
+                select(county, cases, deaths)
+        }
     })
     output$stateTotals <- renderTable({
         counties %>% filter(date==cur_date()) %>%
