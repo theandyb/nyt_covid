@@ -63,3 +63,5 @@ for(i in 1:(length(names(day_list)) - 1) ){
     final <- bind_rows(final, df)
   }
 }
+
+write_csv(final, "weird_counties.csv")

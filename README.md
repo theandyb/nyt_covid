@@ -34,3 +34,7 @@ The directory `growth_over_time` has a simple R shiny app to look at how case nu
 library(shiny)
 runApp('growth_over_time')
 ```
+
+## Anomalies
+
+The script `anomaly_detection.r` and the accompanying shiny app `anomaly_table` produce a list of counties and dates where each row represents a county whose case and/or death count on one day was less than the previous date. Results from me having run this are available in `weird_counties.csv` (note: this might not be up to date with latest NYT data)
