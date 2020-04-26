@@ -33,7 +33,7 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
         sidebarPanel(
-            dateInput("date1", "Date:", value = min(counties$date)),
+            dateInput("date1", "Date:"),
             selectInput("state", "State:", sort(unique(counties$state))),
             checkboxInput("case", "Sort by cases?")
         ),

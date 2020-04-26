@@ -1,0 +1,21 @@
+---
+title: "Lili's eSIR model"
+author: "Andy Beck"
+date: "4/17/2020"
+output: html_document
+---
+
+# Steps taken to get things installed
+
+## Outside of R
+
+```{bash, eval=F, echo=T}
+brew install jags
+```
+
+## In R
+
+```{r, eval=F, echo=T}
+install.packages("rjags")
+devtools::install_github("lilywang1988/eSIR")
+```
