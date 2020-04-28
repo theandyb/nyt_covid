@@ -86,7 +86,8 @@ server <- function(input, output) {
   })
   output$stateTotal <- renderTable({
     total <- dataTable() %>% pull(cases) %>% sum()
-    data.frame(state = "Ohio", total = total)
+    deaths <- dataTable() %>% pull(deaths) %>% sum
+    data.frame(state = "Ohio", cases = total, deaths = deaths)
   })
   output$finalTable <- renderTable({
     dataTable()
