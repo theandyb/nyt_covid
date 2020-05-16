@@ -19,3 +19,4 @@ for(i in 2:length(df$Date)){
 }
 
 df$cDeath <- cumulative_deaths
+

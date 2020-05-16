@@ -1,6 +1,7 @@
 # exclude the data files
 data/*
 !data/.gitkeep
+Indiana_Cumulative_Counts/*.xlsx
 
 rsconnect/
 

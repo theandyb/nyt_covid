@@ -1,24 +1,35 @@
 library(shiny)
 library(tidyverse)
+library(xlsx)
 
-df <- read_csv("covid_report_stratified_20200425.csv")
+df <- read.xlsx("covid_report_county_date.xlsx", 1)
 
 cases_as_of_date <-function(Day, County,df){
     df %>% 
-        filter(report_investigation_date <= as.Date(Day)) %>% 
-        filter(county == County) %>%
-        pull(case_count) %>% sum()
+        filter(DATE <= as.Date(Day)) %>% 
+        filter(COUNTY_NAME == County) %>%
+        pull(COVID_COUNT) %>% sum()
+}
+
+deaths_as_of_date <-function(Day, County,df){
+    df %>% 
+        filter(DATE <= as.Date(Day)) %>% 
+        filter(COUNTY_NAME == County) %>%
+        pull(COVID_DEATHS) %>% sum()
 }
 
 table_gen <- function(df, Day){
     
-    final <- tibble(county = sort(unique(df$county)))
+    final <- tibble(county = sort(unique(df$COUNTY_NAME)))
     counts <- c()
+    deaths <- c()
     
     for(County in final$county){
         counts <- c(counts, cases_as_of_date(Day, County,df))
+        deaths <- c(deaths, deaths_as_of_date(Day, County,df))
     }
     final$case_count <- counts
+    final$deaths <- deaths
     return(final)
 }
 

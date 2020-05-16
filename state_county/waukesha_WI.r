@@ -6,4 +6,5 @@ json_data <- fromJSON("https://services9.arcgis.com/dKYZjkrFtNq9jT4H/arcgis/rest
 
 
 df <- json_data$features$attributes %>%
-  mutate(Date = as.Date(anytime(Date / 1000)))
+  mutate(Date = as.Date(anytime(Date / 1000))) %>%
+  select(Date, Daily, Total)
