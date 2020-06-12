@@ -12,7 +12,7 @@ library(tidyverse)
 library(magrittr)
 library(lubridate)
 
-counties <- read_csv("../data/us-counties.csv")
+counties <- read_csv("../data/covid-19-data/us-counties.csv")
 
 # Build master list of states and counties
 

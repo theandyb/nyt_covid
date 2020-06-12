@@ -1,6 +1,6 @@
 library(tidyverse)
 library(jsonlite)
-library(googlesheets4)
+library(writexl)
 
 # Get the data from the state's JSON feed(?)
 json_data <- fromJSON(
@@ -31,4 +31,4 @@ for(day in day_list){
   final <- full_join(final, little_df)
 }
 
-gs4_create("Indiana-2020_05_19", sheets = list(data = final))
+writexl::write_xlsx(final, "indiana.xlsx")

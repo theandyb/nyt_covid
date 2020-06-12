@@ -1,5 +1,5 @@
 library(tidyverse)
-library(googlesheets4)
+library(writexl)
 library(anytime)
 
 counties <- c("Adams","Allen","Ashland","Ashtabula","Athens","Auglaize","Belmont",
@@ -71,4 +71,4 @@ for(day in day_list){
   final <- full_join(final, little_df)
 }
 
-gs4_create(name = "Ohio-2020_05_19", sheets = list(data = final))
+writexl::write_xlsx(final, "ohio.xlsx")
