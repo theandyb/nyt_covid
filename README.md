@@ -44,6 +44,8 @@ The script `anomaly_detection.r` and the accompanying shiny app `anomaly_table` 
 
 ## Indiana Data
 
+**The state no longer provides this file (boo). JSON version should still work.**
+
 The `Indiana_Cumulative_Counts` directory contains an RShiny app that parses the `COVID-19 CASE DATA` csv file available at [Indiana's Data Hub](https://hub.mph.in.gov/dataset?q=COVID) and returns the cumulative case count in each county by day. I've included a dataset in this directory, but likely you'll want to download something more recent from the Data Hub.
 
 The `indiana_json` directory has an Rshiny app and some additional code for pulling data from the state's JSON feed.
