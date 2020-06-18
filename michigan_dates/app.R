@@ -72,6 +72,12 @@ df4 <- df4 %>%
 df5 <- df5 %>%
     renamer(5)
 
+df <- df %>% mutate(tCase1 = cCase1 + pCase1, tDeath1 = cDeath1 + pDeath1)
+df2 <- df2 %>% mutate(tCase2 = cCase2 + pCase2, tDeath2 = cDeath2 + pDeath2)
+df3 <- df3 %>% mutate(tCase3 = cCase3 + pCase3, tDeath3 = cDeath3 + pDeath3)
+df4 <- df4 %>% mutate(tCase4 = cCase4 + pCase4, tDeath4 = cDeath4 + pDeath4)
+df5 <- df5 %>% mutate(tCase5 = cCase5 + pCase5, tDeath5 = cDeath5 + pDeath5)
+
 
 df <- full_join(df, df2, by=c("COUNTY", "Date")) %>% 
     full_join(df3, by=c("COUNTY", "Date")) %>%
@@ -90,7 +96,7 @@ ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
             selectInput("county", "County", counties),
-            selectInput("type", "Variable", c("cCase", "pCase", "cDeath", "pDeath"))
+            selectInput("type", "Variable", c("tCase", "cCase", "pCase", "tDeath","cDeath", "pDeath"))
         ),
 
         # Show a plot of the generated distribution
@@ -112,7 +118,7 @@ server <- function(input, output) {
                 summarise_at(vars(-group_cols()), sum)
         }
         vizdat <- vizdat %>%
-            gather(type, measure, cCase1:pDeath5) %>% 
+            gather(type, measure, cCase1:tDeath5) %>% 
             arrange(Date) %>%
             filter(!is.na(measure))
         
