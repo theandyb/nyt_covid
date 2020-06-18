@@ -12,6 +12,8 @@ library(readxl)
 library(tidyverse)
 library(lubridate)
 library(rlang)
+library(plotly)
+library(htmlwidgets)
 
 '%!in%' <- function(x,y)!('%in%'(x,y))
 
@@ -32,6 +34,7 @@ read_the_data <- function(fname){
     return(full_join(tmp.confirmed, tmp.probable))
 }
 
+df5 <- read_the_data("../data/MI_2020-06-17.xlsx")
 df4 <- read_the_data("../data/MI_2020-06-16.xlsx")
 df3 <- read_the_data("../data/MI_2020-06-15.xlsx")
 df2 <- read_the_data("../data/MI_2020-06-14.xlsx")
@@ -66,10 +69,15 @@ df3 <- df3 %>%
     renamer(3)
 df4 <- df4 %>%
     renamer(4)
+df5 <- df5 %>%
+    renamer(5)
+
 
 df <- full_join(df, df2, by=c("COUNTY", "Date")) %>% 
     full_join(df3, by=c("COUNTY", "Date")) %>%
-    full_join(df4, by=c("COUNTY", "Date"))
+    full_join(df4, by=c("COUNTY", "Date")) %>%
+    full_join(df5, by=c("COUNTY", "Date"))
+
 counties <- c("All",unique(df$COUNTY))
 
 # Define UI for application that draws a histogram
@@ -87,7 +95,7 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-           plotOutput("cntPlt")
+           plotlyOutput("cntPlt")
         )
     )
 )
@@ -95,7 +103,7 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
-    output$cntPlt <- renderPlot({
+    output$cntPlt <- renderPlotly({
         
         if(input$county != "All"){
             vizdat <- df %>% filter(COUNTY == input$county)
@@ -104,14 +112,17 @@ server <- function(input, output) {
                 summarise_at(vars(-group_cols()), sum)
         }
         vizdat <- vizdat %>%
-            gather(type, measure, cCase1:pDeath4) %>% 
+            gather(type, measure, cCase1:pDeath5) %>% 
             arrange(Date) %>%
             filter(!is.na(measure))
         
-        vizdat %>% filter(grepl(input$type, type)) %>%
+        p<- vizdat %>% filter(grepl(input$type, type)) %>%
             filter(Date >= as.Date("2020-06-01")) %>%
             ggplot(aes(x = Date, y = measure, colour = type)) +
-            geom_point()
+            geom_point() + geom_line() + ylab("Count") + labs( colour = "Day of Report") +
+            scale_color_discrete(labels = c("6/13","6/14","6/15","6/16","6/17"))
+        ggplotly(p)
+        
     })
 }
 

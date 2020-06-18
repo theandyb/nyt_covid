@@ -22,6 +22,7 @@ read_the_data <- function(fname){
    return(full_join(tmp.confirmed, tmp.probable))
 }
 
+df5 <- read_the_data("data/MI_2020-06-17.xlsx")
 df4 <- read_the_data("data/MI_2020-06-16.xlsx")
 df3 <- read_the_data("data/MI_2020-06-15.xlsx")
 df2 <- read_the_data("data/MI_2020-06-14.xlsx")
@@ -56,10 +57,14 @@ df3 <- df3 %>%
    renamer(3)
 df4 <- df4 %>%
    renamer(4)
+df5 <- df5 %>%
+   renamer(5)
+
 
 df <- full_join(df, df2, by=c("COUNTY", "Date")) %>% 
    full_join(df3, by=c("COUNTY", "Date")) %>%
-   full_join(df4, by=c("COUNTY", "Date"))
+   full_join(df4, by=c("COUNTY", "Date")) %>%
+   full_join(df5, by=c("COUNTY", "Date"))
 
 wayne <- df %>% filter(COUNTY == "Wayne") %>%
    gather(type, measure, cCase1:pDeath4) %>% 
