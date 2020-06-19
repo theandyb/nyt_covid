@@ -34,6 +34,8 @@ read_the_data <- function(fname){
     return(full_join(tmp.confirmed, tmp.probable))
 }
 
+df7 <- read_the_data("../data/MI_2020-06-19.xlsx")
+df6 <- read_the_data("../data/MI_2020-06-18.xlsx")
 df5 <- read_the_data("../data/MI_2020-06-17.xlsx")
 df4 <- read_the_data("../data/MI_2020-06-16.xlsx")
 df3 <- read_the_data("../data/MI_2020-06-15.xlsx")
@@ -71,18 +73,26 @@ df4 <- df4 %>%
     renamer(4)
 df5 <- df5 %>%
     renamer(5)
+df6 <- df6 %>%
+    renamer(6)
+df7 <- df7 %>%
+    renamer(7)
 
 df <- df %>% mutate(tCase1 = cCase1 + pCase1, tDeath1 = cDeath1 + pDeath1)
 df2 <- df2 %>% mutate(tCase2 = cCase2 + pCase2, tDeath2 = cDeath2 + pDeath2)
 df3 <- df3 %>% mutate(tCase3 = cCase3 + pCase3, tDeath3 = cDeath3 + pDeath3)
 df4 <- df4 %>% mutate(tCase4 = cCase4 + pCase4, tDeath4 = cDeath4 + pDeath4)
 df5 <- df5 %>% mutate(tCase5 = cCase5 + pCase5, tDeath5 = cDeath5 + pDeath5)
+df6 <- df6 %>% mutate(tCase6 = cCase6 + pCase6, tDeath6 = cDeath6 + pDeath6)
+df7 <- df7 %>% mutate(tCase7 = cCase7 + pCase7, tDeath7 = cDeath7 + pDeath7)
 
 
 df <- full_join(df, df2, by=c("COUNTY", "Date")) %>% 
     full_join(df3, by=c("COUNTY", "Date")) %>%
     full_join(df4, by=c("COUNTY", "Date")) %>%
-    full_join(df5, by=c("COUNTY", "Date"))
+    full_join(df5, by=c("COUNTY", "Date")) %>%
+    full_join(df6, by=c("COUNTY", "Date")) %>%
+    full_join(df7, by=c("COUNTY", "Date"))
 
 counties <- c("All",unique(df$COUNTY))
 
@@ -101,7 +111,8 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-           plotlyOutput("cntPlt")
+           plotlyOutput("cntPlt"),
+           tableOutput("counts")
         )
     )
 )
@@ -118,7 +129,7 @@ server <- function(input, output) {
                 summarise_at(vars(-group_cols()), sum)
         }
         vizdat <- vizdat %>%
-            gather(type, measure, cCase1:tDeath5) %>% 
+            gather(type, measure, cCase1:tDeath7) %>% 
             arrange(Date) %>%
             filter(!is.na(measure))
         
@@ -126,9 +137,32 @@ server <- function(input, output) {
             filter(Date >= as.Date("2020-06-01")) %>%
             ggplot(aes(x = Date, y = measure, colour = type)) +
             geom_point() + geom_line() + ylab("Count") + labs( colour = "Day of Report") +
-            scale_color_discrete(labels = c("6/13","6/14","6/15","6/16","6/17"))
+            scale_color_discrete(labels = c("6/13","6/14","6/15","6/16","6/17", "6/18", "6/19"))
         ggplotly(p)
         
+    })
+    
+    output$counts <- renderTable({
+        tdat <- df7 %>% 
+            filter(Date == as.Date("2020-06-19")) %>% 
+            arrange(COUNTY) %>%
+            mutate(cases = cCase7 + pCase7,
+                   deaths = cDeath7 + pDeath7) %>%
+            select(COUNTY, cases, deaths)
+        
+        wayne_tot <- tdat[which(tdat$COUNTY == "Detroit City"), 2:3] +
+            tdat[which(tdat$COUNTY == "Wayne"), 2:3]
+        wayne_tot <- bind_cols(data.frame(COUNTY = "Wayne"), wayne_tot)
+        
+        unknown_tot <- tdat[which(tdat$COUNTY == "FCI"), 2:3] +
+            tdat[which(tdat$COUNTY == "MDOC"), 2:3] +
+            tdat[which(tdat$COUNTY == "Out-of-State"), 2:3] +
+            tdat[which(tdat$COUNTY == "Unknown"), 2:3]
+        unknown_tot <- bind_cols(data.frame(COUNTY = "Unknown"), unknown_tot)
+        
+        tdat <- tdat %>% filter(COUNTY %!in% c("Wayne", "Detroit City", "FCI", "MDOC", "Out-of-State", "Unknown"))
+        tdat <- bind_rows(tdat, wayne_tot) %>% arrange(COUNTY) %>% bind_rows(unknown_tot)
+        tdat
     })
 }
 
